@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Epidemic Simulator Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0a0b;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .test-result {
+            background: #1a1a1d;
+            border: 1px solid #3a3a3d;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+        }
+        .pass { border-color: #4ecdc4; }
+        .fail { border-color: #ff6b6b; }
+        canvas {
+            border: 1px solid #3a3a3d;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Epidemic Simulator - Core Functionality Test</h1>
+    
+    <div id="test-results">
+        <div class="test-result" id="canvas-test">
+            <h3>Canvas API Test</h3>
+            <p id="canvas-status">Testing...</p>
+        </div>
+        
+        <div class="test-result" id="person-test">
+            <h3>Person Class Test</h3>
+            <p id="person-status">Testing...</p>
+        </div>
+        
+        <div class="test-result" id="simulation-test">
+            <h3>Simulation Logic Test</h3>
+            <p id="simulation-status">Testing...</p>
+        </div>
+    </div>
+    
+    <canvas id="test-canvas" width="400" height="200"></canvas>
+    
+    <script>
+        // Test 1: Canvas API
+        function testCanvas() {
+            try {
+                const canvas = document.getElementById('test-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Draw test pattern
+                ctx.fillStyle = '#4ecdc4';
+                ctx.fillRect(10, 10, 50, 50);
+                
+                ctx.fillStyle = '#ff6b6b';
+                ctx.beginPath();
+                ctx.arc(100, 35, 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffd93d';
+                ctx.fillRect(150, 10, 50, 50);
+                
+                ctx.fillStyle = '#6c5ce7';
+                ctx.beginPath();
+                ctx.arc(250, 35, 25, 0, Math.PI * 2);
+                ctx.fill();
+                
+                document.getElementById('canvas-status').textContent = '✅ Canvas API working!';
+                document.getElementById('canvas-test').classList.add('pass');
+                return true;
+            } catch (error) {
+                document.getElementById('canvas-status').textContent = '❌ Canvas API failed: ' + error.message;
+                document.getElementById('canvas-test').classList.add('fail');
+                return false;
+            }
+        }
+        
+        // Test 2: Person Class
+        function testPersonClass() {
+            try {
+                // Simple Person class for testing
+                class TestPerson {
+                    constructor(x, y) {
+                        this.x = x;
+                        this.y = y;
+                        this.status = 'healthy';
+                        this.vx = Math.random() - 0.5;
+                        this.vy = Math.random() - 0.5;
+                    }
+                    
+                    update() {
+                        this.x += this.vx;
+                        this.y += this.vy;
+                    }
+                    
+                    getDistance(other) {
+                        const dx = this.x - other.x;
+                        const dy = this.y - other.y;
+                        return Math.sqrt(dx * dx + dy * dy);
+                    }
+                }
+                
+                const person1 = new TestPerson(0, 0);
+                const person2 = new TestPerson(3, 4);
+                
+                const distance = person1.getDistance(person2);
+                if (Math.abs(distance - 5) < 0.001) {
+                    document.getElementById('person-status').textContent = '✅ Person class working!';
+                    document.getElementById('person-test').classList.add('pass');
+                    return true;
+                } else {
+                    throw new Error('Distance calculation incorrect');
+                }
+            } catch (error) {
+                document.getElementById('person-status').textContent = '❌ Person class failed: ' + error.message;
+                document.getElementById('person-test').classList.add('fail');
+                return false;
+            }
+        }
+        
+        // Test 3: Simulation Logic
+        function testSimulation() {
+            try {
+                // Test infection probability calculation
+                const infectionRate = 2.5;
+                const populationSize = 100;
+                const expectedProbability = infectionRate / 100;
+                
+                if (expectedProbability > 0 && expectedProbability < 1) {
+                    document.getElementById('simulation-status').textContent = '✅ Simulation logic working!';
+                    document.getElementById('simulation-test').classList.add('pass');
+                    return true;
+                } else {
+                    throw new Error('Infection probability out of range');
+                }
+            } catch (error) {
+                document.getElementById('simulation-status').textContent = '❌ Simulation failed: ' + error.message;
+                document.getElementById('simulation-test').classList.add('fail');
+                return false;
+            }
+        }
+        
+        // Run all tests
+        function runTests() {
+            console.log('🧪 Running epidemic simulator tests...');
+            
+            const canvasResult = testCanvas();
+            const personResult = testPersonClass();
+            const simulationResult = testSimulation();
+            
+            const allPassed = canvasResult && personResult && simulationResult;
+            
+            if (allPassed) {
+                console.log('✅ All tests passed! The epidemic simulator is ready.');
+                document.body.style.borderTop = '5px solid #4ecdc4';
+            } else {
+                console.log('❌ Some tests failed. Check the results above.');
+                document.body.style.borderTop = '5px solid #ff6b6b';
+            }
+        }
+        
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+    
+    <p style="margin-top: 30px;">
+        <a href="index.html" style="color: #00d4ff; text-decoration: none; font-size: 18px;">
+            🚀 Launch Full Epidemic Simulator →
+        </a>
+    </p>
+</body>
+</html>

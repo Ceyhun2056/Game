@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦠 Epidemic Spread Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦠</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🦠 Epidemic Spread Simulator</h1>
+            <p>Interactive SIR Model with Real-time Visualization</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Control Panel -->
+            <aside class="control-panel">
+                <div class="controls-section">
+                    <h3>🎛️ Simulation Controls</h3>
+                    
+                    <!-- Population Controls -->
+                    <div class="control-group">
+                        <label for="population">Population Size</label>
+                        <input type="range" id="population" min="50" max="500" value="200" class="slider">
+                        <span class="value-display" id="population-value">200</span>
+                    </div>
+
+                    <!-- Infection Rate -->
+                    <div class="control-group">
+                        <label for="infection-rate">Infection Rate (R₀)</label>
+                        <input type="range" id="infection-rate" min="0.1" max="5.0" step="0.1" value="2.5" class="slider">
+                        <span class="value-display" id="infection-rate-value">2.5</span>
+                    </div>
+
+                    <!-- Recovery Rate -->
+                    <div class="control-group">
+                        <label for="recovery-rate">Recovery Rate (γ)</label>
+                        <input type="range" id="recovery-rate" min="0.01" max="1.0" step="0.01" value="0.1" class="slider">
+                        <span class="value-display" id="recovery-rate-value">0.10</span>
+                    </div>
+
+                    <!-- Vaccination Rate -->
+                    <div class="control-group">
+                        <label for="vaccination-rate">Vaccination Rate (%)</label>
+                        <input type="range" id="vaccination-rate" min="0" max="5" step="0.1" value="0.5" class="slider">
+                        <span class="value-display" id="vaccination-rate-value">0.5%</span>
+                    </div>
+
+                    <!-- Mask Usage -->
+                    <div class="control-group">
+                        <label for="mask-usage">Mask Usage (%)</label>
+                        <input type="range" id="mask-usage" min="0" max="100" value="60" class="slider">
+                        <span class="value-display" id="mask-usage-value">60%</span>
+                    </div>
+
+                    <!-- Simulation Speed -->
+                    <div class="control-group">
+                        <label for="sim-speed">Simulation Speed</label>
+                        <input type="range" id="sim-speed" min="0.1" max="3.0" step="0.1" value="1.0" class="slider">
+                        <span class="value-display" id="sim-speed-value">1.0x</span>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="button-group">
+                        <button id="start-pause-btn" class="btn btn-primary">▶️ Start</button>
+                        <button id="reset-btn" class="btn btn-secondary">🔄 Reset</button>
+                    </div>
+                </div>
+
+                <!-- Statistics Panel -->
+                <div class="stats-section">
+                    <h3>📊 Live Statistics</h3>
+                    <div class="stat-item">
+                        <span class="stat-label">Healthy:</span>
+                        <span class="stat-value" id="healthy-count">200</span>
+                        <div class="stat-color healthy-color"></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Infected:</span>
+                        <span class="stat-value" id="infected-count">0</span>
+                        <div class="stat-color infected-color"></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Recovered:</span>
+                        <span class="stat-value" id="recovered-count">0</span>
+                        <div class="stat-color recovered-color"></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Vaccinated:</span>
+                        <span class="stat-value" id="vaccinated-count">0</span>
+                        <div class="stat-color vaccinated-color"></div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Day:</span>
+                        <span class="stat-value" id="day-count">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Peak Infected:</span>
+                        <span class="stat-value" id="peak-infected">0</span>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="legend-section">
+                    <h3>🎨 Legend</h3>
+                    <div class="legend-item">
+                        <div class="legend-dot healthy-color"></div>
+                        <span>Healthy (Susceptible)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot infected-color"></div>
+                        <span>Infected</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot recovered-color"></div>
+                        <span>Recovered (Immune)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot vaccinated-color"></div>
+                        <span>Vaccinated</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Simulation Area -->
+            <section class="simulation-area">
+                <!-- Canvas Container -->
+                <div class="canvas-container">
+                    <canvas id="simulation-canvas"></canvas>
+                    <div class="canvas-overlay">
+                        <div class="fps-counter">FPS: <span id="fps-display">60</span></div>
+                    </div>
+                </div>
+
+                <!-- Chart Container -->
+                <div class="chart-container">
+                    <canvas id="epidemic-chart"></canvas>
+                </div>
+            </section>
+        </main>
+
+        <!-- Educational Content -->
+        <section class="education-section">
+            <div class="education-content">
+                <h3>📚 Understanding the SIR Model</h3>
+                <div class="education-grid">
+                    <div class="education-card">
+                        <h4>🦠 R₀ (Basic Reproduction Number)</h4>
+                        <p>The average number of people one infected person will infect. R₀ > 1 means the epidemic grows, R₀ < 1 means it declines.</p>
+                    </div>
+                    <div class="education-card">
+                        <h4>⚡ Recovery Rate (γ)</h4>
+                        <p>How quickly infected people recover. Higher values mean shorter infection periods and faster epidemic progression.</p>
+                    </div>
+                    <div class="education-card">
+                        <h4>😷 Mask Effectiveness</h4>
+                        <p>Masks reduce transmission by blocking respiratory droplets. High compliance significantly flattens the epidemic curve.</p>
+                    </div>
+                    <div class="education-card">
+                        <h4>💉 Vaccination Impact</h4>
+                        <p>Vaccination creates immunity without infection, reducing the susceptible population and achieving herd immunity faster.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Built with ❤️ using HTML5 Canvas, Chart.js, and modern JavaScript | 
+            <a href="https://github.com/Ceyhun2056/Game" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

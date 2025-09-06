@@ -1,0 +1,32 @@
+# GitHub Pages Configuration
+# This file ensures proper deployment settings for the epidemic simulator
+
+# Enable GitHub Pages
+# The site will be built from the main branch, root directory
+
+# Custom domain (optional)
+# domain: your-custom-domain.com
+
+# Build settings
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Exclude files from the site
+exclude:
+  - README.md
+  - .gitignore
+  - .git/
+
+# Site settings for SEO
+title: "🦠 Epidemic Spread Simulator"
+description: "Interactive epidemic simulation with real-time visualization using HTML5 Canvas and Chart.js"
+author: "GitHub Copilot"
+url: "https://ceyhun2056.github.io"
+baseurl: "/Game"
+
+# Social media
+github_username: Ceyhun2056
+
+# Analytics (optional)
+# google_analytics: YOUR_TRACKING_ID
